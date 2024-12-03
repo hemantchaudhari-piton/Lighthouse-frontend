@@ -1,0 +1,203 @@
+<div id="vocational-coordinator" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <!-- <div class="top-bg accent"></div> -->
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center" class="title">
+
+                <button mat-icon-button class="mat-icon-button mr-0 mr-sm-16" [routerLink]="'/vocational-coordinators'">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="PageRights.PageType ==='Edit'">
+                        {{ vocationalCoordinatorModel.Name }}
+                    </div>
+                    <div class="h2" *ngIf="PageRights.PageType ==='New'">
+                        New Vocational Coordinator
+                    </div>
+                    <div class="subtitle secondary-text">
+                        <span>Vocational Coordinator Details</span>
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+            <button mat-raised-button class="add-button fuse-white mt-24 mt-md-0" *ngIf="PageRights.ActionType ==='new'"
+                (click)="saveOrUpdateVocationalCoordinatorDetails()">
+                <span>ADD</span>
+            </button>
+
+            <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0" *ngIf="PageRights.ActionType ==='edit'"
+                (click)="saveOrUpdateVocationalCoordinatorDetails()">
+                <span>SAVE</span>
+            </button>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT -->
+            <div class="content">
+
+                <form name="vocationalCoordinatorForm" [formGroup]="vocationalCoordinatorForm"
+                    class="vocational-coordinator w-100-p p-24 mr-24" fxLayout="column" fxLayoutAlign="start"
+                    fxFlex="1 0 auto" fxFlex fusePerfectScrollbar>
+                    <!-- <mat-tab label="Basic Info"> -->
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+                        <mat-form-field appearance="outline" fxFlex="25" fxFlex.lt-sm="75">
+                            <mat-label>Academic Year</mat-label>
+
+                            <mat-select name="academicYear" ngDefaultControl formControlName="AcademicYear" required
+                                [disabled]="PageRights.IsReadOnly">
+                                <mat-option [value]="academicYearItem.Name"
+                                    *ngFor="let academicYearItem of academicYearList">
+                                    {{ academicYearItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.AcademicYear.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'AcademicYear')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label>Select Vocational Coordinator</mat-label>
+
+                            <mat-select formControlName="VCId" ngDefaultControl required appearance="outline"
+                                matTooltip="Select Vocational Coordinator" matTooltipPosition='above'
+                                matTooltipClass="allow-cr" [disabled]="PageRights.IsReadOnly" #SelectVC
+                                (selectionChange)="onChangeVC($event.value)">
+                                <!-- <mat-select-filter class="select-filter" *ngIf="SelectVC.focused" [array]="vcList"
+                                    (filteredReturn)="this.filteredVcItems = $event" [displayMember]="'Name'">
+                                </mat-select-filter> -->
+                                <mat-option [value]="vcItem.Id" *ngFor="let vcItem of filteredVcItems">
+                                    {{ vcItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.VCId.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'VCId')}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="30" fxFlex.lt-sm="90" style="margin-right: 10px;">
+                            <mat-label>Email</mat-label>
+                            <input matInput name="emailId" formControlName="EmailId" required>
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.EmailId.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'EmailId')}}
+                            </mat-error>
+                        </mat-form-field>
+                    
+                        <mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="30" fxFlex.lt-sm="90" style="margin-right: 10px;">
+                            <mat-label>First Mobile Number</mat-label>
+                            <input matInput name="mobile" formControlName="Mobile" required digitOnly minlength="10" maxlength="10">
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.Mobile.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'Mobile')}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="30" fxFlex.lt-sm="100">
+                            <mat-label>Second Mobile Number</mat-label>
+                            <input matInput name="mobile1" formControlName="Mobile1" digitOnly minlength="10"
+                                maxlength="10">
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.Mobile1.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'Mobile1')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="50" fxFlex.lt-sm="100">
+                            <mat-label>Gender</mat-label>
+                            <mat-select name="gender" formControlName="Gender" ngDefaultControl required appearance="outline"
+                                [disabled]="PageRights.IsReadOnly">
+                                <mat-option [value]="genderItem.Id" *ngFor="let genderItem of genderList">
+                                    {{ genderItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.Gender.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'Gender')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label>Date Of Joining</mat-label>
+                            <input matInput name="dateOfJoining" formControlName="DateOfJoining" required
+                                [matDatepicker]="dateOfJoining" [disabled]="PageRights.IsReadOnly" [max]="CurrentDate" [readonly]="true" (click)="dateOfJoining.open()">
+                            <mat-datepicker-toggle matSuffix [for]="dateOfJoining"></mat-datepicker-toggle>
+                            <mat-datepicker #dateOfJoining></mat-datepicker>
+
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.DateOfJoining.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'DateOfJoining')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75" fxFlex.lt-sm="100"
+                        *ngIf="PageRights.ActionType ==='edit' || PageRights.ActionType ==='view'">
+                            <mat-label>Date Of Resignation</mat-label>
+                            <input matInput name="dateOfResignation"
+                                [min]="vocationalCoordinatorForm.controls.DateOfJoining.value"
+                                formControlName="DateOfResignation"
+                                (dateChange)="onChangeDateEnableDisableCheckBox(vocationalCoordinatorForm, $event)"
+                                [matDatepicker]="dateOfResignation"
+                                [max]="CurrentDate" [readonly]="true" (click)="dateOfResignation.open()">
+                            <mat-datepicker-toggle matSuffix [for]="dateOfResignation"></mat-datepicker-toggle>
+                            <mat-datepicker #dateOfResignation></mat-datepicker>
+                            <mat-error *ngIf="vocationalCoordinatorForm.controls.DateOfResignation.invalid">
+                                {{getErrorMessage(vocationalCoordinatorForm, 'DateOfResignation')}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-icon matDatepickerToggleIcon
+                            (click)="clearDateValueInFormControl(vocationalCoordinatorForm, 'DateOfResignation', $event)"
+                            *ngIf="vocationalCoordinatorForm.controls.DateOfResignation.value && PageRights.ActionType !='view'">
+                            clear</mat-icon>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+                        <span class="checkbox-space">Is Active?</span>
+                        <mat-checkbox matInput formControlName="IsActive" ngDefaultControl  [disabled]="ture">
+                        </mat-checkbox>
+                    </div>
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

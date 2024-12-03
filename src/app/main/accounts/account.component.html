@@ -1,0 +1,204 @@
+<div id="account" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <!-- <div class="top-bg accent"></div> -->
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    shopping_basket
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    USERS
+                    <a [routerLink]="['./']" class="refresh-data mt-24 mt-md-0">
+                        <mat-icon [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">refresh</mat-icon>
+                    </a>
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter (keyup)="applySearchFilter($event.target.value)" placeholder="Search for a accounts">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            
+            <!-- ADD BUTTON -->
+            <div class="action-buttons">
+
+            <button mat-raised-button class="fuse-white filter-button" style="margin-bottom: 10px;"
+            (click)="IsShowFilter=!IsShowFilter" matTooltipPosition="left"
+                matTooltip="Show/Hide Filters">
+                <span>FILTERS</span>
+            </button>
+            <button *ngIf="PageRights.IsAdd" mat-raised-button [routerLink]="['./','new']" skipLocationChange="true" replaceUrl="false" class="add-button fuse-white mt-24 mt-md-0">
+                <span>ADD</span>
+            </button>
+            </div>
+            <!-- / ADD BUTTON -->
+
+        </div>
+        <!-- / HEADER -->
+        <!-- Filter Section -->
+        <div class="filter-content-card" *ngIf="IsShowFilter">
+            <div class="filter-content">
+                <form name="userFilterForm" [formGroup]="userFilterForm" class="vc-issue-report" fxLayout="column"
+                    fxLayoutAlign="start" fxFlex="1 0 auto" fxFlex>
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+                        <mat-form-field fxFlex="15" fxFlex.lt-md="10" fxFlex.lt-sm="100">
+                            <mat-label>Account Type</mat-label>
+                            <mat-select formControlName="UserRole" ngDefaultControl name="UserRole" appearance="fill"
+                            >
+                            <mat-option [value]="roleItem.Name" *ngFor="let roleItem of roleList">
+                                {{ roleItem.Name }}
+                            </mat-option>
+                        </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="15" fxFlex.lt-md="10" fxFlex.lt-sm="100">
+                            <mat-label>Status</mat-label>
+                            <mat-select name="status" formControlName="Status" ngDefaultControl appearance="fill">
+                                <mat-option value="">Status</mat-option>
+                                <mat-option value="true">Active</mat-option>
+                                <mat-option value="false">Inactive</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="clear-filter pr-1" fxFlex="20" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <button mat-raised-button class="fuse-white filter-button"
+                                (click)="onLoadHeadMastersByFilters()"><span>SEARCH</span></button>
+                            <button mat-raised-button class="fuse-white filter-button"
+                                (click)="resetFilters()"><span>CLEAR</span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /Filter Section -->
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table class="responsive-table account-table responsive-table" #table [dataSource]="tableDataSource" matSort fusePerfectScrollbar [fusePerfectScrollbarOptions]="{'suppressScrollX': false}">
+
+                <!-- LoginId Column -->
+                <ng-container matColumnDef="LoginId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>LoginId</mat-header-cell>
+                    <mat-cell *matCellDef="let account" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{account.LoginId}}</p>
+                    </mat-cell>
+                </ng-container>                                
+
+                <!-- UserName Column -->
+                <ng-container matColumnDef="UserName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxShow.lt-sm fxShow.gt-md>User Name</mat-header-cell>
+                    <mat-cell *matCellDef="let account">
+                        <p class="text-truncate">{{account.UserName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- EmailId Column -->
+                <ng-container matColumnDef="EmailId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>EmailId</mat-header-cell>
+                    <mat-cell *matCellDef="let account" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{account.EmailId}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Mobile Column -->
+                <ng-container matColumnDef="Mobile">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Mobile</mat-header-cell>
+                    <mat-cell *matCellDef="let account" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{account.Mobile}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                 <!-- AccountType Column -->
+                 <ng-container matColumnDef="AccountType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Account Type</mat-header-cell>
+                    <mat-cell *matCellDef="let account">
+                        <p class="text-truncate">{{account.AccountType}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                        <!-- CreatedBy Column -->
+                        <ng-container matColumnDef="CreatedBy">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>CreatedBy</mat-header-cell>
+                            <mat-cell *matCellDef="let account">
+                                <p class="text-truncate">{{account.CreatedBy}}</p>
+                            </mat-cell>
+                        </ng-container>
+
+                <!-- UpdatedBy Column -->
+                 <ng-container matColumnDef="UpdatedBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>UpdatedBy</mat-header-cell>
+                    <mat-cell *matCellDef="let account">
+                        <p class="text-truncate">{{account.UpdatedBy}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- IsLocked Column -->
+                <ng-container matColumnDef="IsLocked">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Is Locked?</mat-header-cell>
+                    <mat-cell *matCellDef="let account" fxHide fxShow.gt-xs>
+                        <mat-icon *ngIf="account.IsLocked" class="data-active s-20">check</mat-icon>
+                        <mat-icon *ngIf="!account.IsLocked" class="active-icon red-500 s-16">close</mat-icon>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- IsActive Column -->
+                <ng-container matColumnDef="IsActive">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Is Active?</mat-header-cell>
+                    <mat-cell *matCellDef="let account" fxHide fxShow.gt-xs>
+                        <mat-icon *ngIf="account.IsActive" class="data-active s-20">check</mat-icon>
+                        <mat-icon *ngIf="!account.IsActive" class="data-inactive s-20">close</mat-icon>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Actions" stickyEnd>
+                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let account">
+
+                        <button class="mat-mdc-icon-button" *ngIf="PageRights.IsView" mat-icon-button
+                        [routerLink]="['/users', 'view', account.AccountId]" skipLocationChange="true" replaceUrl="false">
+                            <mat-icon class="data-view s-22">visibility</mat-icon>
+                        </button>
+
+                        <button class="mat-mdc-icon-button" *ngIf="PageRights.IsEdit && account.IsActive && 'Roles : SUR'.indexOf(account.RoleCode) == -1" mat-icon-button
+                        [routerLink]="['/users', 'edit', account.AccountId]" skipLocationChange="true" replaceUrl="false">
+                            <mat-icon class="data-edit s-20">edit</mat-icon>
+                        </button>
+
+                        <button class="mat-mdc-icon-button" *ngIf="PageRights.IsDelete && account.IsActive && 'Roles : SUR'.indexOf(account.RoleCode) == -1" mat-icon-button (click)="onDeleteAccount(account.AccountId)">
+                            <mat-icon class="data-delete s-22">delete_outline</mat-icon>
+                        </button>
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let account; columns: displayedColumns;" class="account" matRipple>
+                </mat-row>
+            </mat-table>
+
+            <mat-paginator #ListPaginator [length]="tableDataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

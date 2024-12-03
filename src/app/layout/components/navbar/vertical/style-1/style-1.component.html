@@ -1,0 +1,58 @@
+<div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
+
+    <div class="logo">
+        <img class="logo-icon" src="assets/images/logos/lighthouse-logo.png">
+        <!-- <span class="logo-text secondary-text">Lighthouse</span> -->
+    </div>
+
+    <div class="buttons">
+
+        <button mat-icon-button class="toggle-sidebar-folded"
+                (click)="toggleSidebarFolded()" fxHide.lt-lg>
+            <mat-icon class="secondary-text" style="color:black !important;">menu</mat-icon>
+        </button>
+
+        <button mat-icon-button class="toggle-sidebar-opened"
+                (click)="toggleSidebarOpened()" fxHide.gt-md>
+            <mat-icon class="secondary-text" style="color:black !important;">arrow_back</mat-icon>
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="navbar-scroll-container" 
+    [ngClass]="fuseConfig.layout.navbar.primaryBackground"
+     fusePerfectScrollbar [fusePerfectScrollbarOptions]="{suppressScrollX: true}">
+
+    <div class="user" fxLayout="column" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
+
+        <div class="h3 username" style="color: black !important">{{currentUser.FirstName}} {{currentUser.LastName}}</div>
+        <div class="h5 email hint-text mt-8" style="color: black !important">{{currentUser.EmailId}}</div>
+        <div class="h6 state hint-text mt-8 mb-5" *ngIf="schoolName" style="color: black !important">{{schoolName}}</div>
+        <!-- <div class="avatar-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground">
+            <img class="avatar" src="assets/images/avatars/Velazquez.jpg">
+        </div> -->
+    </div>
+
+    <div class="navbar-content" >
+        <fuse-navigation class="material2" layout="vertical"></fuse-navigation>
+        <button *ngIf="(currentUser.RoleCode === 'ADM' || currentUser.RoleCode === 'VT') && showInternshipBtn === true" style="padding-left: 40px;
+        cursor: pointer;
+        margin-top: 8px;
+        display: flex;
+        background-color: transparent;
+        flex-wrap: wrap;
+        height: 10px;
+        border: none;
+        color: blueviolet;
+        width: 75%;
+        justify-content: space-between;" (click)="generateAndOpenPathwaysLink()">Internship Portal
+            <svg style="height: 40px; " viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M384 32c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H384zM320 313.4V176c0-8.8-7.2-16-16-16H166.6c-12.5 0-22.6 10.1-22.6 22.6c0 6 2.4 11.8 6.6 16L184 232l-66.3 66.3C114 302 112 306.9 112 312s2 10 5.7 13.7l36.7 36.7c3.6 3.6 8.5 5.7 13.7 5.7s10-2 13.7-5.7L248 296l33.4 33.4c4.2 4.2 10 6.6 16 6.6c12.5 0 22.6-10.1 22.6-22.6z"></path>
+            </svg>
+        </button>
+    </div>
+
+</div>

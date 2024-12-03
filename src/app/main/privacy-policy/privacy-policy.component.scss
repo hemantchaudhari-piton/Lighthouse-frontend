@@ -1,0 +1,48 @@
+@use '@angular/material' as mat;
+@import "../../../@fuse/scss/fuse.scss";
+
+@include mat.core();
+
+privacy-policy {
+  #privacy-policy {
+    width: 100%;
+    background-size: cover;
+    border-radius: 5px;
+    padding: 20px;
+    font-size: 16px;
+    border: 1px solid #eee;
+    display: flex;
+    background-color: #fff;
+    margin: 10px;
+    .policies {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .policies2 {
+      overflow-x: hidden;
+      overflow-y: auto;
+      margin-left: 6%;
+      margin-right: 10%;
+      margin-top: 1%;
+    }
+    .paragraph-spacing {
+      margin-bottom: 50px; /* Adjust as needed */
+    }
+    .heading {
+      font-weight: 600;
+      color: black;
+      text-decoration: none;
+      font-size: 1.6em;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    .heading2 {
+      font-weight: 600;
+      color: black;
+      text-decoration: none;
+      font-size: 1.6em;
+      margin-top: 40px;
+      margin-bottom: 10px;
+    }
+  }
+}

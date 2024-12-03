@@ -1,0 +1,15 @@
+<div class="dialog-dialog">
+    <div class="dialog-close">
+        <mat-icon id="close-icon" (click)="closeDialog()">close</mat-icon>
+    </div>
+    
+    <div class="dialog-message">
+        <span class="content-span full-width" [innerHtml]="data.message">            
+        </span>
+    </div>
+
+    <div mat-dialog-actions class="dialog-action" >
+        <button mat-flat-button class = "mat-raised-button mat-accent mr-16" id="no-button" [mat-dialog-close]="false">NO</button>
+        <button mat-raised-button class="mat-raised-button mat-accent mr-16"[mat-dialog-close]="true">YES</button>
+    </div>
+</div>

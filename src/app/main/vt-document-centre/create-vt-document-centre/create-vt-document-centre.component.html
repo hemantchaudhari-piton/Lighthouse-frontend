@@ -1,0 +1,187 @@
+<div id="vocational-trainer" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <!-- <div class="top-bg accent"></div> -->
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center" class="title">
+
+                <button mat-icon-button class="mat-icon-button mr-0 mr-sm-16" [routerLink]="'/vt-document-centre'">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="PageRights.PageType ==='Edit'">
+                        {{ vocationalTrainerModel.Name }}
+                    </div>
+                    <div class="h2" *ngIf="PageRights.PageType ==='New'">
+                        Upload Document Centre
+                    </div>
+                    <div class="subtitle secondary-text">
+                        <span> Upload Document Centre</span>
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+            <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0"                
+                *ngIf="PageRights.ActionType ==='edit'" (click)="saveOrUpdateVocationalTrainerDetails()">
+                <span>SAVE</span>
+            </button>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT -->
+            <div class="content">
+
+                <form name="vtDocumentCentreForm" [formGroup]="vtDocumentCentreForm"
+                    class="vocational-trainer w-100-p p-24 mr-24" fxLayout="column" fxLayoutAlign="start"
+                    fxFlex="1 0 auto" fxFlex fusePerfectScrollbar>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                    fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field appearance="outline" fxFlex="25" fxFlex.lt-sm="75">
+                        <mat-label>Academic Year</mat-label>
+
+                        <mat-select name="academicYear" ngDefaultControl formControlName="AcademicYear" required
+                       [disabled]="PageRights.IsReadOnly">
+                            <mat-option [value]="academicYearItem.Name"
+                                *ngFor="let academicYearItem of academicYearList">
+                                {{ academicYearItem.Name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="vtDocumentCentreForm.controls.AcademicYear.invalid">
+                            {{getErrorMessage(vtDocumentCentreForm, 'AcademicYear')}}
+                        </mat-error>
+                    </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label>Select Vocational Trainer</mat-label>
+                            <input type="text" placeholder="Search for a VT" matInput formControlName="VTId" [matAutocomplete]="auto" [disabled]="PageRights.IsReadOnly" (focus)="onFocus()">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayVTName"  (optionSelected)="selectVT($event)">
+                                <mat-option *ngFor="let VT of filteredVTs" [value]="VT">
+                                    {{ VT.Name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                              <mat-error *ngIf="vtDocumentCentreForm.controls.VTId.invalid">
+                                  {{getErrorMessage(vtDocumentCentreForm, 'VTId')}}
+                              </mat-error>
+                          </mat-form-field>
+
+                          <mat-form-field appearance="outline"  fxFlex="70" fxFlex.lt-md="50"
+                            fxFlex.lt-sm="100">
+                            <mat-label>Email</mat-label>
+                            <input matInput name="email" formControlName="Email" required
+                                placeholder="Ex. abc@test.com">
+                            <mat-error *ngIf="vtDocumentCentreForm.controls.Email.invalid">
+                                {{getErrorMessage(vtDocumentCentreForm, 'Email')}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                    fxLayoutGap.lt-md="0px">
+                        <mat-form-field appearance="outline"  fxFlex="50" fxFlex.lt-md="75"
+                            fxFlex.lt-sm="100">
+                            <mat-label>Academic Qualification</mat-label>
+                            <mat-select name="academicQualification" ngDefaultControl formControlName="AcademicQualification" required
+                                appearance="outline" [disabled]="PageRights.IsReadOnly">
+                                <mat-option [value]="academicQualificationItem.Id"
+                                    *ngFor="let academicQualificationItem of academicQualificationList">
+                                    {{ academicQualificationItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vtDocumentCentreForm.controls.AcademicQualification.invalid">
+                                {{getErrorMessage(vtDocumentCentreForm, 'AcademicQualification')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                            <mat-form-field appearance="outline"  fxFlex="100" fxFlex.lt-md="100"
+                                fxFlex.lt-sm="100">
+                                <mat-label>Upload Qualification Documents</mat-label>
+                                <ngx-mat-file-input name="qualificationDocumentFile" formControlName="QualificationDocumentFile"
+                                    [accept]="AllowedPDFExtensions" [disabled]="PageRights.IsReadOnly"
+                                    (change)="uploadedQualificationDocumentUploadFile($event)" required>
+                                    
+                                </ngx-mat-file-input>
+                                <mat-error *ngIf="vtDocumentCentreForm.controls.QualificationDocumentFile.invalid">
+                                    {{getErrorMessage(vtDocumentCentreForm, 'QualificationDocumentFile')}}
+                                </mat-error>
+                              </mat-form-field>
+                              <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                              fxLayoutGap.lt-md="0px">
+                                <span class="material-icons action-btn" *ngIf="isAvailableQualificationFile"
+                                (click)="downloadUploadedQualificationFile()" matTooltip="Download Uploaded Qualification Document File"
+                                matTooltipPosition="above">get_app</span>
+                              </div>
+                    </div>
+
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                    fxLayoutGap.lt-md="0px">
+                        <mat-form-field appearance="outline"  fxFlex="50" fxFlex.lt-md="75"
+                            fxFlex.lt-sm="100">
+                            <mat-label>Industry Experience Months</mat-label>
+                            <input matInput name="industryExperienceMonths" formControlName="IndustryExperienceMonths"
+                                required digitOnly maxlength="4" min="0" max="1000"
+                                matTooltip="Enter Total Industry Experience in Concerned Vocational Sector in Months."
+                                matTooltipPosition="above">
+                            <mat-error *ngIf="vtDocumentCentreForm.controls.IndustryExperienceMonths.invalid">
+                                {{getErrorMessage(vtDocumentCentreForm, 'IndustryExperienceMonths')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75"
+                            fxFlex.lt-sm="100">
+                            <mat-label>Training Experience Months</mat-label>
+                            <input matInput name="trainingExperienceMonths" formControlName="TrainingExperienceMonths"
+                                required digitOnly maxlength="4" min="0" max="1000"
+                                matTooltip="Enter Total Training Experience in Concerned Vocational Sector in Months."
+                                matTooltipPosition="above">
+                            <mat-error *ngIf="vtDocumentCentreForm.controls.TrainingExperienceMonths.invalid">
+                                {{getErrorMessage(vtDocumentCentreForm, 'TrainingExperienceMonths')}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                    fxLayoutGap.lt-md="0px">
+                        <mat-form-field appearance="outline"  fxFlex="100" fxFlex.lt-md="100"
+                            fxFlex.lt-sm="100">
+                            <mat-label>Upload Industry/Training Experience Documents</mat-label>
+                            <ngx-mat-file-input name="experienceDocumentsFile" formControlName="ExperienceDocumentFile"
+                                [accept]="AllowedPDFExtensions" [disabled]="PageRights.IsReadOnly"
+                                (change)="uploadedExperienceUploadFile($event)" required>
+                            </ngx-mat-file-input>
+                            <mat-error *ngIf="vtDocumentCentreForm.controls.ExperienceDocumentFile.invalid">
+                                {{getErrorMessage(vtDocumentCentreForm, 'ExperienceDocumentFile')}}
+                            </mat-error>
+                        </mat-form-field>
+                        <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+                          <span class="material-icons action-btn" *ngIf="isAvailableExperienceFile"
+                            (click)="downloadUploadedExperienceFile()" matTooltip="Download Uploaded Experience Document File"
+                            matTooltipPosition="above">get_app</span>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

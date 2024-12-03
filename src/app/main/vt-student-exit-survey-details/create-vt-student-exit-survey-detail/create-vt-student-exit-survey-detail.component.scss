@@ -1,0 +1,134 @@
+#vt-student-exit-survey-detail {
+    .header {
+        .subtitle {
+            margin: 6px 0 0 0;
+            color: black !important;
+        }
+
+        .incomplete-student-details {
+            color: red;
+            margin-left: 35px;
+            font-size: 18px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .content {
+        .mat-tab-group,
+        .mat-tab-body-wrapper,
+        .tab-content {
+            flex: 1 1 auto;
+            max-width: 100%;
+        }
+
+        .mat-tab-body-content {
+            display: flex;
+        }
+
+        .mat-tab-label {
+            height: 64px;
+        }
+
+        // Temporary prefix alignment fix
+        .mat-form-field-appearance-outline .mat-form-field-prefix,
+        .mat-form-field-appearance-outline .mat-form-field-suffix {
+            top: 0;
+        }
+
+        .checkbox-space {
+            margin-left: 3px;
+            margin-right: 15px;
+            padding-top: 3px;
+        }
+
+        .margin-left {
+            margin-left: 5%;
+        }
+
+        .subtitle-general-information {
+            text-align: center;
+            margin-bottom: 1%;
+            font-size: 17px;
+            margin-top: 1%;
+        }
+
+        .margin-left-VEHelpsToTakeDecision {
+            margin-left: 9%;
+        }
+
+        .mat-form-field-infix>.mat-input-element:disabled {
+            color: #3c4252 !important;
+        }
+
+        .mat-radio {
+            margin-bottom: 10px;
+        }
+
+        .radio-space-tc {
+            margin-left: 5px !important;
+            margin-top: -4px !important;
+            margin-bottom: 18px !important;
+        }
+
+        .mat-error-width {
+            min-width: 350px;
+        }
+
+        .radio-button {
+            @mixin sm {
+                @include media-breakpoint("lt-sm") {
+                    height: 60px;
+                }
+            }
+        }
+
+        .mat-form-field-invalid .mat-radio-label-content {
+            color: #f44336;
+        }
+
+        .mat-form-field-invalid .mat-radio-outer-circle {
+            border-color: #f44336 !important;
+        }
+
+        .radio-row {
+            mat-label {
+                padding-top: 15px;
+                padding-left: 5px;
+                margin-right: 5px !important;
+            }
+
+            mat-radio-group {
+                padding-top: 15px;
+            }
+        }
+
+        @mixin lg {
+            @include media-breakpoint("lg") {
+                .radio-row {
+                    height: 40px;
+                }
+            }
+        }
+
+        .radio-container {
+            padding-top: 15px;
+
+            mat-label {
+                margin-left: 25px;
+                margin-right: 30px !important;
+                max-width: fit-content !important;
+            }
+        }
+
+        .mat-row-button {
+            padding-top: 5px;
+            margin-left: 23px;
+        }
+
+        .fieldset-container {
+            border-color: #fbfbfb;
+            border-radius: 5px;
+        }
+    }
+}

@@ -1,0 +1,420 @@
+<div id="cts" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    shopping_basket
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Child Tracking System
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- ADD BUTTON -->
+            <div class="action-buttons">
+                <a [routerLink]="['./']" class="refresh-data mt-24 mt-md-0">
+                    <mat-icon [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">refresh</mat-icon>
+                </a>
+
+                <a *ngIf="PageRights.IsExport" class="export-excel" (click)="exportExcel()">
+                    <mat-icon> cloud_download</mat-icon>
+                </a>
+            </div>
+            <!-- / ADD BUTTON -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" style="flex: 1 0 auto;">
+            <!-- CONTENT -->
+            <div class="content">
+                <mat-card class="cts-student-card" style="padding-bottom: 2px">
+                    <mat-card-header>
+                        <mat-card-title style="font-size: 15px;margin-bottom: 5px;">
+                            Gujarat CTS Student Details
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="margin-bottom: -5px;">
+                        <form name="ctsStudentForm" [formGroup]="ctsStudentForm" class="cts-student-data ml-24"
+                            fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" fxFlex>
+
+                            <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                                fxLayoutGap.lt-md="0px">
+
+                                <!-- <mat-form-field fxFlex="40" fxFlex.lt-md="75" fxFlex.lt-sm="100" appearance="outline">
+                                    <mat-label>School</mat-label> -->
+
+                                    <!-- <mat-select formControlName="SchoolId" [required]="UserModel.RoleCode != 'VT'"
+                                        appearance="outline" matTooltip="School" matTooltipPosition='above'
+                                        matTooltipClass="allow-cr" (selectionChange)="onChangeSchool($event.value)"
+                                        [disabled]="PageRights.IsReadOnly" #SelectSchool> -->
+                                        <!-- <mat-select-filter class="select-filter" *ngIf="SelectSchool.focused"
+                                            [array]="schoolList" (filteredReturn)="this.filteredSchoolItems = $event"
+                                            [displayMember]="'Name'"></mat-select-filter> -->
+                                        <!-- <mat-option [value]="schoolItem.Id"
+                                            *ngFor="let schoolItem of filteredSchoolItems">
+                                            {{ schoolItem.Name }}
+                                        </mat-option>
+                                    </mat-select> -->
+                                    <!-- <mat-error *ngIf="ctsStudentForm.controls.SchoolId.invalid">
+                                        {{getErrorMessage(ctsStudentForm, 'SchoolId')}}
+                                    </mat-error>
+                                </mat-form-field> -->
+
+                                <mat-form-field appearance="outline" fxFlex="65" fxFlex.lt-md="100" fxFlex.lt-sm="100">
+                                    <mat-label>School</mat-label>
+                                <input type="text" placeholder="Search for a school" matInput formControlName="SchoolId" [matAutocomplete]="auto" [disabled]="PageRights.IsReadOnly" (focus)="onFocus()" required>
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaySchoolName"  (optionSelected)="selectSchool($event)">
+                                    <mat-option *ngFor="let school of filteredSchools" [value]="school">
+                                        {{ school.Name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="ctsStudentForm.controls.SchoolId.invalid">
+                                    {{getErrorMessage(ctsStudentForm, 'SchoolId')}}
+                                </mat-error>
+                            </mat-form-field>
+
+                                <mat-form-field fxFlex="20" fxFlex.lt-md="75" fxFlex.lt-sm="100" appearance="outline">
+                                    <mat-label>Class </mat-label>
+
+                                    <mat-select formControlName="ClassId" appearance="outline"
+                                        (selectionChange)="onChangeClass($event.value)" required>
+                                        <mat-option [value]="classItem.Id" *ngFor="let classItem of studentClassList">
+                                            {{ classItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="ctsStudentForm.controls.ClassId.invalid">
+                                        {{getErrorMessage(ctsStudentForm, 'ClassId')}}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="15" fxFlex.lt-md="75" fxFlex.lt-sm="100" appearance="outline">
+                                    <mat-label>Section</mat-label>
+
+                                    <mat-select formControlName="SectionId" appearance="outline" [disabled] = "true">
+                                        <mat-option *ngFor="let sectionItem of sectionList;" [value]="sectionItem.Id">
+                                            {{ sectionItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="ctsStudentForm.controls.SectionId.invalid">
+                                        {{getErrorMessage(ctsStudentForm, 'SectionId')}}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <div class="clear-filter" fxFlex="25" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                                    <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0" style="margin-top: 5px;"
+                                        (click)="syncStudentsFromGujaratCTSBySchool()"><span>SYNC STUDENTS FROM
+                                            CTS</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+
+                <mat-card class="lahi-student-card" style="padding-top: 2px">
+                    <mat-card-header>
+                        <mat-card-title style="font-size: 15px;margin-bottom: 5px;">
+                            Student Mapping with Vocational Trainer
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="margin-bottom: -5px;">
+                        <form name="ctsTrainerForm" [formGroup]="ctsTrainerForm" class="cts-student-trainer ml-24"
+                            fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" fxFlex>
+
+                            <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                                fxLayoutGap.lt-md="0px">
+                                
+                                    <mat-form-field appearance="outline" fxFlex="65" fxFlex.lt-md="100" fxFlex.lt-sm="100">
+                                        <mat-label>School</mat-label>
+                                    <input type="text" placeholder="Search for a school" matInput formControlName="SchoolId" [matAutocomplete]="auto" [disabled]="PageRights.IsReadOnly" (focus)="onFocus()" required>
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaySchoolName"  (optionSelected)="selectSchool($event)">
+                                        <mat-option *ngFor="let school of filteredSchools" [value]="school">
+                                            {{ school.Name }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="ctsTrainerForm.controls.SchoolId.invalid">
+                                        {{getErrorMessage(ctsTrainerForm, 'SchoolId')}}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                                    <mat-label>Select Sector</mat-label>
+        
+                                    <mat-select formControlName="SectorId" required appearance="outline"
+                                        (selectionChange)="onChangeSector($event.value)" [disabled]="PageRights.IsReadOnly">
+                                        <mat-option [value]="sectorItem.Id" *ngFor="let sectorItem of sectorList">
+                                            {{ sectorItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <!-- <mat-error *ngIf="schoolsectorjobForm.controls.SectorId.invalid">
+                                        {{getErrorMessage(schoolsectorjobForm, 'SectorId')}}
+                                    </mat-error> -->
+                                </mat-form-field>
+
+                                <!-- <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                                    <mat-label>Select Job Role</mat-label>
+        
+                                    <mat-select name="jobRoleId" formControlName="JobRoleId" required appearance="outline"
+                                        [disabled]="PageRights.IsReadOnly">
+                                        <mat-option [value]="jobRoleItem.Id" *ngFor="let jobRoleItem of jobRoleList">
+                                            {{ jobRoleItem.Name }}
+                                        </mat-option>
+                                    </mat-select> -->
+                                    <!-- <mat-error *ngIf="schoolsectorjobForm.controls.JobRoleId.invalid">
+                                        {{getErrorMessage(schoolsectorjobForm, 'JobRoleId')}}
+                                    </mat-error> -->
+                                <!-- </mat-form-field> -->
+
+                                <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                                    <mat-label>Select Job Role</mat-label>
+        
+                                    <mat-select name="jobRoleId" formControlName="JobRoleId" required appearance="outline"
+                                        [disabled]="PageRights.IsReadOnly" (selectionChange)="onChangeJobRole($event.value)">
+                                        <mat-option [value]="jobRoleItem.Id" *ngFor="let jobRoleItem of jobRoleList">
+                                            {{ jobRoleItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="ctsTrainerForm.controls.JobRoleId.invalid">
+                                        {{getErrorMessage(ctsTrainerForm, 'JobRoleId')}}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                
+                            </div>
+
+                            <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                                fxLayoutGap.lt-md="0px">
+
+                                <!-- <mat-form-field fxFlex="30" fxFlex.lt-md="75" fxFlex.lt-sm="100" appearance="outline">
+                                    <mat-label> Academic Year</mat-label>
+
+                                    <mat-select formControlName="AcademicYearId" name="academicYearId" required
+                                        appearance="outline" (selectionChange)="onChangeAcademicYear($event.value)">
+                                        <mat-option [value]="academicYearItem.Id"
+                                            *ngFor="let academicYearItem of academicYearList">
+                                            {{ academicYearItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                            
+                                <!-- <mat-form-field appearance="outline" fxFlex="33" fxFlex.lt-md="50" fxFlex.lt-sm="100">
+                                    <mat-label>Select Academic Year</mat-label>
+        
+                                    <mat-select formControlName="AcademicYearId" required appearance="outline"
+                                        [disabled]="PageRights.IsReadOnly"
+                                        (selectionChange)="onChangeAcademicYear($event.value)">
+                                        <mat-option [value]="academicYearItem.Id"
+                                            *ngFor="let academicYearItem of academicYearList">
+                                            {{ academicYearItem.Name }}
+                                        </mat-option>
+                                    </mat-select> -->
+                                    <!-- <mat-error *ngIf="ctsTrainerForm.controls.AcademicYearId.invalid">
+                                        {{getErrorMessage(studentClassForm, 'AcademicYearId')}}
+                                    </mat-error> -->
+                                <!-- </mat-form-field> -->
+
+                                <mat-form-field appearance="outline" fxFlex="33" fxFlex.lt-md="50" fxFlex.lt-sm="100">
+                                    <mat-label>Select Academic Year</mat-label>
+        
+                                    <mat-select formControlName="AcademicYearId" required appearance="outline"
+                                        [disabled]="PageRights.IsReadOnly"
+                                        (selectionChange)="onChangeAcademicYear($event.value)">
+                                        <mat-option [value]="academicYearItem.Id"
+                                            *ngFor="let academicYearItem of academicYearList">
+                                            {{ academicYearItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="ctsTrainerForm.controls.AcademicYearId.invalid">
+                                        {{getErrorMessage(ctsTrainerForm, 'AcademicYearId')}}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="15" fxFlex.lt-md="75" fxFlex.lt-sm="100" appearance="outline">
+                                    <mat-label>Class </mat-label>
+
+                                    <mat-select formControlName="VTClassId" required appearance="outline"
+                                        disabled="true" (selectionChange)="onChangeClass($event.value)">
+                                        <mat-option [value]="classItem.Id" *ngFor="let classItem of classList">
+                                            {{ classItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="ctsTrainerForm.controls.VTClassId.invalid">
+                                        {{getErrorMessage(ctsTrainerForm, 'VTClassId')}}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="15" fxFlex.lt-md="75" fxFlex.lt-sm="100" appearance="outline">
+                                    <mat-label>Section</mat-label>
+
+                                    <mat-select formControlName="VTSectionId" required appearance="outline">
+                                        <mat-option *ngFor="let sectionItem of sectionList;" [value]="sectionItem.Id">
+                                            {{ sectionItem.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="ctsTrainerForm.controls.VTSectionId.invalid">
+                                        {{getErrorMessage(ctsTrainerForm, 'VTSectionId')}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </form>
+                    </mat-card-content>
+
+                    <mat-card-actions style="display: block; padding-bottom: 10px; position: relative; top: -14px">
+                        <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                            fxLayoutGap.lt-md="0px">
+
+                            <div class="clear-filter pr-1" fxFlex="30" fxFlex.lt-md="75" fxFlex.lt-sm="100"></div>
+
+                            <div class="clear-filter pr-1" fxFlex="60" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                                <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0"
+                                    (click)="getStudentsFromGujaratCTS()" style="margin-right: 10px;"><span>SEARCH STUDENTS</span></button>
+
+                                <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0"
+                                    (click)="studentsMappingWithTrainer()" style="margin-right: 10px;"><span>TRANSFER STUDENTS</span></button>
+
+                                <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0"
+                                    (click)="resetFilters()" style="margin-right: 5px;"><span>CLEAR</span></button>
+                            </div>
+                        </div>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </div>
+        <!-- /CONTENT CARD -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- HEADER -->
+            <div class="header accent" fxLayout="column" fxLayoutAlign="start center" fxLayout.gt-sm="row">
+                <!-- SEARCH -->
+                <div class="search-wrapper mx-32 mx-md-0">
+                    <span class="search-card-title">Search Student</span>
+
+                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="center center">
+                        <mat-icon>search</mat-icon>
+                        <input name="searchText" formControlName="SearchText" placeholder="Search for Student" #filter
+                            (keyup)="applySearchFilter($event.target.value)">
+                    </div>
+                </div>
+                <!-- / SEARCH -->
+            </div>
+            <!-- / HEADER -->
+
+            <mat-table class="student-class-table full-width-table responsive-table" #table
+                [dataSource]="tableDataSource" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{'suppressScrollX': false}" fixedLayout="true">
+
+                <!-- SchoolName Column -->
+                <ng-container matColumnDef="SchoolName">
+                    <mat-header-cell *matHeaderCellDef>School Name </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.SchoolName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- ClassName Column -->
+                <ng-container matColumnDef="ClassName">
+                    <mat-header-cell *matHeaderCellDef>Class Name </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.ClassName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- SectionName Column -->
+                <ng-container matColumnDef="SectionName">
+                    <mat-header-cell *matHeaderCellDef>Section Name </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.SectionName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- StudentName Column -->
+                <ng-container matColumnDef="StudentName">
+                    <mat-header-cell *matHeaderCellDef>Student Name </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.StudentName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Gender Column -->
+                <ng-container matColumnDef="Gender">
+                    <mat-header-cell *matHeaderCellDef>Gender </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.Gender}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- DateOfBirth Column -->
+                <ng-container matColumnDef="DateOfBirth">
+                    <mat-header-cell *matHeaderCellDef>Date Of Birth </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.DateOfBirth }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- StudentRollNumber Column -->
+                <ng-container matColumnDef="StudentRollNumber">
+                    <mat-header-cell *matHeaderCellDef>Student Unique Id </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.StudentRollNumber}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- FatherName Column -->
+                <ng-container matColumnDef="FatherName">
+                    <mat-header-cell *matHeaderCellDef>Father Name </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.FatherName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- MotherName Column -->
+                <ng-container matColumnDef="MotherName">
+                    <mat-header-cell *matHeaderCellDef>Mother Name </mat-header-cell>
+                    <mat-cell *matCellDef="let student">
+                        <p class="text-truncate">{{student.MotherName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- IsMapWithTrainer Column -->
+                <ng-container matColumnDef="IsMapWithTrainer" stickyEnd>
+                    <mat-header-cell *matHeaderCellDef class="mat-header-center">
+                        <span>Is Selected? &nbsp;&nbsp;</span>
+                        <mat-checkbox (change)="onStudentForVTMapping($event, null)"></mat-checkbox>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let student" class="text-center">
+                        <mat-checkbox [checked]="student.IsSelected" (change)="onStudentForVTMapping($event, student)"
+                            [disabled]="student.IsMapWithTrainer == 1">
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+                <mat-row *matRowDef="let student; columns: displayedColumns;" class="student-class" matRipple>
+                </mat-row>
+            </mat-table>
+
+            <mat-paginator #ListPaginator [length]="SearchBy.TotalResults" [pageIndex]="SearchBy.PageIndex"
+                [pageSize]="SearchBy.PageSize" [pageSizeOptions]="SearchBy.PageSizeOptions"
+                [showFirstLastButtons]="SearchBy.ShowFirstLastButtons">
+            </mat-paginator>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

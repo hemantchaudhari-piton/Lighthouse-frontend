@@ -1,0 +1,257 @@
+<div id="vt-daily-reporting" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <!-- <div class="top-bg accent"></div> -->
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    shopping_basket
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <span *ngIf="UserModel.RoleCode === 'VT'">VT DAILY REPORTING</span>
+                    <span *ngIf="UserModel.RoleCode === 'HM'">VT REGULARIZATION DETAILS</span>
+                    <a [routerLink]="['./']" class="refresh-data mt-24 mt-md-0">
+                        <mat-icon [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">refresh</mat-icon>
+                    </a>
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter (keyup)="applySearchFilter($event.target.value)"
+                        placeholder="Search for a vt daily reporting">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- ADD BUTTON -->
+            <div class="action-buttons">
+            <button *ngIf="PageRights.IsAdd && UserModel.RoleCode == 'VT'" mat-raised-button [routerLink]="['./','new']" skipLocationChange="true" replaceUrl="false"
+                class="add-button fuse-white mt-24 mt-md-0">
+                <span>ADD</span>
+            </button>
+            <button *ngIf="showAlert" mat-raised-button class="fuse-white filter-button" style="margin-bottom: 10px;"
+            (click)="IsShowFilter=!IsShowFilter"><span>FILTERS</span>
+        </button>
+            <!-- <a *ngIf="PageRights.IsExport" class="export-excel" (click)="exporter.exportTable('xlsx', {fileName:'VTDailyReporting', sheet: 'VTDailyReporting', Props: {Author: 'Lighthouse'}})"> -->
+                <a *ngIf="PageRights.IsExport" class="export-excel" (click)="exportExcel()">
+             
+                <mat-icon> cloud_download</mat-icon>
+            </a>
+            </div>
+            <!-- / ADD BUTTON -->
+
+        </div>
+        <!-- / HEADER -->
+        <div *ngIf="showAlert && UserModel.RoleCode == 'VT'" style="margin-bottom: 10px;"><span class="rejected" style="border-radius: 15px 15px 0 0; padding: 10px 13px;">Please re-submit a revised entry for your absent days. The deadline is <b>{{monthName}}</b></span></div>
+        <div *ngIf="showAlert && UserModel.RoleCode == 'HM'" style="margin-bottom: 10px;"><span class="rejected" style="border-radius: 15px 15px 0 0; padding: 10px 13px;">Please review new and revised entries from VT. The last day for review is <b>{{monthName}}</b></span></div>
+
+          <!-- Filter Section -->
+          <div class="filter-content-card" *ngIf="IsShowFilter">
+            <div class="filter-content">
+                <form name="vtdailyReportingFilterForm" [formGroup]="vtdailyReportingFilterForm" fxLayout="column"
+                    fxLayoutAlign="start" fxFlex="1 0 auto" fxFlex>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+                        <mat-form-field fxFlex="20" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label> Month</mat-label>
+
+                            <mat-select formControlName="MonthId" name="monthId" appearance="fill">
+                                <mat-option [value]="monthItem.Id" *ngFor="let monthItem of monthList">
+                                    {{ monthItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="20" fxFlex.lt-md="50" fxFlex.lt-sm="100" *ngIf="UserModel.RoleCode == 'HM'">
+                            <mat-label>VT</mat-label>
+
+                            <mat-select name="vtId" formControlName="VTId" appearance="fill">
+                                <mat-option [value]="vtitem.Id"
+                                    *ngFor="let vtitem of vtlist">
+                                    {{ vtitem.Name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="20" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label> HM Review Status</mat-label>
+
+                            <mat-select formControlName="HMReviewStatus" name="hmreviewstatus" appearance="fill">
+                                <mat-option value="0">Not-Reviewed</mat-option>
+                                <mat-option value="1">Approved</mat-option>
+                                <mat-option value="2">Rejected</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- <mat-form-field fxFlex="20" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label>Sector</mat-label>
+                            <mat-select formControlName="SectorId" name="sectorId" appearance="fill"
+                                (selectionChange)="onChangeSector($event.value)">
+                                <mat-option [value]="sectorItem.Id" *ngFor="let sectorItem of sectorList">
+                                    {{ sectorItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field> -->
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+
+                        <div class="clear-filter" fxFlex="60" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <button mat-raised-button class="fuse-white filter-button"
+                                (click)="onLoadVTDailyReportingByFilters()"><span>SEARCH</span></button>
+                            <button mat-raised-button class="fuse-white filter-button"
+                                (click)="resetFilters()"><span>CLEAR</span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /Filter Section -->
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table matTableExporter class="vt-daily-reporting-table responsive-table" #table [dataSource]="tableDataSource" matSort>
+            <!-- #exporter="matTableExporter" [hiddenColumns]="[5]"
+            fusePerfectScrollbar [fusePerfectScrollbarOptions]="{'suppressScrollX': false}"> -->
+
+                <!-- SchoolName Column -->
+                <ng-container matColumnDef="SchoolName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxShow.lt-sm fxShow.gt-md>
+                        School
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting">
+                        <p class="text-truncate">{{vtDailyReporting.SchoolName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- SectorName Column -->
+                <ng-container matColumnDef="SectorName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxShow.lt-sm fxShow.gt-md>
+                        Sector
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting">
+                        <p class="text-truncate">{{vtDailyReporting.SectorName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- JobRoleName Column -->
+                <ng-container matColumnDef="JobRoleName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxShow.lt-sm fxShow.gt-md>
+                        JobRole
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting">
+                        <p class="text-truncate">{{vtDailyReporting.JobRoleName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- ReportType Column -->
+                <ng-container matColumnDef="ReportType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>
+                        Report Type
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{vtDailyReporting.ReportType}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- ReportingDate Column -->
+                <ng-container matColumnDef="ReportingDate">
+                    <mat-header-cell *matHeaderCellDef class="tab-col-15" mat-sort-header fxHide fxShow.gt-xs>
+                        Reporting Date
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting" class="tab-col-15" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">
+                            {{vtDailyReporting.ReportingDate | date: Constants.ShortDateFormat }}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- WorkTypes Column -->
+                <ng-container matColumnDef="WorkTypes">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>
+                        Work Types
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{vtDailyReporting.WorkTypes}}</p>
+                    </mat-cell>
+                </ng-container>
+                <!-- Remarks Column -->
+                <ng-container *ngIf = "showAlert" matColumnDef="Remarks">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>
+                        Remarks
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{vtDailyReporting.Remarks}}</p>
+                    </mat-cell>
+                </ng-container> 
+
+                   <!-- CreatedBy Column -->
+                   <ng-container matColumnDef="CreatedBy">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>
+                        CreatedBy
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting" fxHide fxShow.gt-xs>
+                        <p class="text-truncate">{{vtDailyReporting.CreatedBy}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                 <!-- HMReview Column -->
+                 <ng-container *ngIf= "showAlert" matColumnDef="HMReview" stickyEnd>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>
+                        HMReview
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting" fxHide fxShow.gt-xs>
+                        <b [class.not-reviewed]="vtDailyReporting.HMReview === '0'"
+                        [class.approved]="vtDailyReporting.HMReview === '1'" 
+                        [class.rejected]="vtDailyReporting.HMReview === '2'" 
+                        [class.default-approved]="vtDailyReporting.HMReview === '3'">{{vtDailyReporting.HMReviewLabel}}</b>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Actions" stickyEnd>
+                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let vtDailyReporting">
+                        <!-- Button for VT role -->
+                        <button *ngIf="PageRights.IsView && UserModel.RoleCode == 'VT'" mat-icon-button class="mat-mdc-icon-button" [routerLink]="['/vt-daily-reporting', 'view', vtDailyReporting.VTDailyReportingId]" skipLocationChange="true" replaceUrl="false">
+                            <mat-icon class="data-view s-20">visibility</mat-icon>
+                        </button>
+
+                        <!-- Button for HM role -->
+                        <button *ngIf="PageRights.IsView && UserModel.RoleCode == 'HM' && showAlert" mat-icon-button class="mat-mdc-icon-button" [routerLink]="['/vt-daily-reporting', 'view', vtDailyReporting.VTDailyReportingId]" skipLocationChange="true" replaceUrl="false">
+                            <mat-icon class="data-view s-20" *ngIf="vtDailyReporting.HMReview == '1' || vtDailyReporting.HMReview == '2' || vtDailyReporting.HMReview == '3'">visibility</mat-icon>
+                            <mat-icon class="data-edit s-20" *ngIf="vtDailyReporting.HMReview == '0'">edit</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let vtDailyReporting; columns: displayedColumns;" class="vt-daily-reporting"
+                         matRipple>
+                </mat-row>
+            </mat-table>
+
+            <mat-paginator #ListPaginator [length]="tableDataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

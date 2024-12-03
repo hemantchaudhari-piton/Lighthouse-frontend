@@ -1,0 +1,203 @@
+<div id="vtacademicclasssection" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <!-- <div class="top-bg accent"></div> -->
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center" class="title">
+
+                <button mat-icon-button class="mat-icon-button mr-0 mr-sm-16" [routerLink]="'/vtacademicclasssections'" skipLocationChange="true"
+                    replaceUrl="false">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="PageRights.PageType ==='Edit'">
+                        {{ vtacademicclasssectionModel.Name }}
+                    </div>
+                    <div class="h2" *ngIf="PageRights.PageType ==='New'">
+                        New VTAcademicClassSection
+                    </div>
+                    <div class="subtitle secondary-text">
+                        <span>VT Academic Class Section Details</span>
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+            <button mat-raised-button class="add-button fuse-white mt-24 mt-md-0" *ngIf="PageRights.ActionType ==='new'"
+                (click)="saveOrUpdateVTAcademicClassSectionDetails()">
+                <span>ADD</span>
+            </button>
+
+            <button mat-raised-button class="save-button fuse-white mt-24 mt-md-0" *ngIf="PageRights.ActionType ==='edit'"
+                (click)="saveOrUpdateVTAcademicClassSectionDetails()">
+                <span>SAVE</span>
+            </button>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT -->
+            <div class="content">
+
+                <form name="vtacademicclasssectionForm" [formGroup]="vtacademicclasssectionForm" class="vtacademicclasssection w-100-p p-24 mr-24"
+                    fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" fxFlex fusePerfectScrollbar>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field appearance="outline" fxFlex="100" fxFlex.lt-md="67" fxFlex.lt-sm="100">
+                            <mat-label>Select School/Sector/JobRole</mat-label>
+                            <input type="text" placeholder="Search for a SSJ" matInput formControlName="SSJId" [matAutocomplete]="auto" [disabled]="PageRights.IsReadOnly" (focus)="onFocus()">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaySSJName"  (optionSelected)="selectSSJ($event)">
+                                <mat-option *ngFor="let ssj of filteredGVTItems" [value]="ssj">
+                                    {{ ssj.Name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.SSJId.invalid ">
+                           School/Sector/JobRole is required.
+                          </mat-error>
+                     </mat-form-field>
+  
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" class="input-row" fxLayoutGap="10px"
+                        fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75" fxFlex.lt-sm="100">
+                            <mat-label>Select Academic Year</mat-label>
+
+                            <mat-select formControlName="AcademicYearId" required appearance="outline"
+                                [disabled]="PageRights.IsReadOnly">
+                                <mat-option [value]="academicYearItem.Id"
+                                    *ngFor="let academicYearItem of academicYearList">
+                                    {{ academicYearItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.AcademicYearId.invalid">
+                                {{getErrorMessage(vtacademicclasssectionForm, 'AcademicYearId')}}
+                            </mat-error>
+                        </mat-form-field>
+
+
+                        <mat-form-field appearance="outline" fxFlex="34" fxFlex.lt-md="50" fxFlex.lt-sm="100">
+                            <mat-label>Select Class</mat-label>
+
+                            <mat-select formControlName="ClassId" required appearance="outline"
+                                [disabled]="PageRights.IsReadOnly" (selectionChange)="onChangeClass($event.value)">
+                                <mat-option [value]="classItem.Id" *ngFor="let classItem of classList">
+                                    {{ classItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.ClassId.invalid">
+                                {{getErrorMessage(vtacademicclasssectionForm, 'ClassId')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="33" fxFlex.lt-md="50" fxFlex.lt-sm="100">
+                            <mat-label>Select Section</mat-label>
+
+                            <mat-select formControlName="SectionId" required appearance="outline"
+                                [disabled]="PageRights.IsReadOnly">
+                                <mat-option [value]="" disabled="true">Select Section</mat-option>
+                                <mat-option [value]="sectionItem.Id" *ngFor="let sectionItem of sectionList">
+                                    {{ sectionItem.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.SectionId.invalid">
+                                {{getErrorMessage(vtacademicclasssectionForm, 'SectionId')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    
+                    <div fxLayout="row" class="input-row" fxLayoutGap="10px">
+
+                        <mat-form-field appearance="outline" fxFlex="33" fxFlex.lt-md="33" fxFlex.lt-sm="100">
+                            <mat-label>Select Vocational Trainer</mat-label>
+                            <input type="text" placeholder="Search for a VT" matInput formControlName="VTId" [matAutocomplete]="autoVT" [disabled]="PageRights.IsReadOnly" (focus)="onFocusVT()">
+                            <mat-autocomplete #autoVT="matAutocomplete" [displayWith]="displayVTName"  (optionSelected)="selectVT($event)">
+                                <mat-option *ngFor="let vt of filteredVTItems" [value]="vt">
+                                    {{ vt.Name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.VTId.invalid">
+                                {{getErrorMessage(vtacademicclasssectionForm, 'VTId')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="33" fxFlex.lt-md="33" fxFlex.lt-sm="100">
+                            <mat-label>School VT Allocation Date</mat-label>
+                            <input matInput [matDatepicker]="dateOfAllocation" name="dateOfAllocation"
+                            [min]="minAllocationDate" [max]="CurrentDate" formControlName="DateOfAllocation" (click)="dateOfAllocation.open()">
+                            <div matSuffix style="display: flex; align-items: center;">
+                                <mat-icon matDatepickerToggleIcon matSuffix [for]="dateOfAllocation" (click)="clearDate('DateOfAllocation')">clear</mat-icon>
+                                <mat-datepicker-toggle matSuffix [for]="dateOfAllocation"></mat-datepicker-toggle>
+                            </div>
+                        <mat-datepicker #dateOfAllocation></mat-datepicker>
+                          <mat-error *ngIf="vtacademicclasssectionForm.controls.DateOfAllocation.invalid"> {{getErrorMessage(vtacademicclasssectionForm, 'DateOfAllocation')}}</mat-error>
+                         </mat-form-field>
+
+                         <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75" fxFlex.lt-sm="100"
+                            *ngIf="(vtacademicclasssectionForm.controls.VTId.value && (PageRights.ActionType === 'edit' || PageRights.ActionType === 'view'))">
+                            <mat-label>Date of VT Removal</mat-label>
+                            <input matInput [matDatepicker]="picker1" name="dateOfRemoval" [max]="CurrentDate"
+                                (dateChange)="onChangeDateEnableDisableCheckBox(vtacademicclasssectionForm, $event)"
+                                [min]="vtacademicclasssectionForm.controls.DateOfAllocation.value"
+                                formControlName="DateOfRemoval" [readonly]="true" (click)="picker1.open()">
+                                <div matSuffix style="display: flex; align-items: center;">
+                                    <mat-icon matDatepickerToggleIcon matSuffix [for]="picker1" (click)="clearDate('DateOfRemoval')">clear</mat-icon>
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                </div>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.DateOfRemoval.invalid">
+                                {{getErrorMessage(vtacademicclasssectionForm, 'DateOfRemoval')}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="75" fxFlex.lt-sm="100"
+                            *ngIf="PageRights.ActionType === 'edit' || PageRights.ActionType === 'view'">
+                            <mat-label>Date of VTACS Removal</mat-label>
+                            <input matInput [matDatepicker]="dateOfRemovalVTACS" name="dateOfRemovalVTACS" [max]="CurrentDate"
+                            (dateChange)="handleDateChange(); onChangeDateEnableDisableCheckBox(vtacademicclasssectionForm, $event)"
+                                [min]="vtacademicclasssectionForm.controls.DateOfAllocation.value"
+                                formControlName="DateOfRemovalVTACS" [readonly]="true" (click)="dateOfRemovalVTACS.open()">
+                                <div matSuffix style="display: flex; align-items: center;">
+                                    <mat-icon matDatepickerToggleIcon matSuffix [for]="dateOfRemovalVTACS" (click)="clearDate('DateOfRemovalVTACS')">clear</mat-icon>
+                                    <mat-datepicker-toggle matSuffix [for]="dateOfRemovalVTACS"></mat-datepicker-toggle>
+                                </div>
+                            <mat-datepicker #dateOfRemovalVTACS></mat-datepicker>
+                            <mat-error *ngIf="vtacademicclasssectionForm.controls.DateOfRemovalVTACS.invalid">
+                                {{getErrorMessage(vtacademicclasssectionForm, 'DateOfRemovalVTACS')}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <span class="checkbox-space">Is Active</span>
+                        <mat-checkbox matInput formControlName="IsActive" ngDefaultControl [disabled]="true">
+                        </mat-checkbox>
+                    </div>
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>
