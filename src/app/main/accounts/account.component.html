@@ -193,9 +193,12 @@
                 </mat-row>
             </mat-table>
 
-            <mat-paginator #ListPaginator [length]="tableDataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 25, 100]">
+            <mat-paginator #ListPaginator [length]="tableDataSource.filteredData.length"[pageIndex]="SearchBy.PageIndex"
+            [pageSize]="SearchBy.PageSize"
+              [pageSizeOptions]="[5, 10, 25, 100]" [showFirstLastButtons]="SearchBy.ShowFirstLastButtons"
+              (page)="onPageIndexChanged($event)">
             </mat-paginator>
+
 
         </div>
         <!-- / CONTENT CARD -->

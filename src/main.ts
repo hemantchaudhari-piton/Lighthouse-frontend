@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import * as Sentry from "@sentry/angular";
-import { environment } from './environments/environment';
+import { environment } from './environments/environment.delhi';
 import { hmrBootstrap } from 'hmr';
 
 if ( environment.production )
@@ -12,7 +12,7 @@ if ( environment.production )
 }
 
 Sentry.init({
-    dsn: environment.sentryDsn,
+    // dsn: environment.sentryDsn,
     ignoreErrors: ["Previous value: ' is required"],
     integrations: [
       Sentry.browserTracingIntegration(),

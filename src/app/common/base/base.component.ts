@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 import { PageRightModel } from 'app/models/page.right.model';
 import { FileUploadModel } from "app/models/file.upload.model";
 import { RouteConstants } from "app/constants/route.constant";
-import { environment } from "environments/environment";
+import { environment } from '../../../environments/environment.delhi';
 import { isMoment } from "moment";
 
 @Component({

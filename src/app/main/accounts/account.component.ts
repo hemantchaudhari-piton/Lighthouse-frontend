@@ -55,10 +55,11 @@ export class AccountComponent extends BaseListComponent<AccountModel> implements
       if (results[0].Success) {
           this.roleList = results[0].Results.$values;
       }
+      this.SearchBy.PageIndex = 0; // delete after script changed
+      this.SearchBy.PageSize = 10; // delete after script changed
       this.onLoadHeadMastersByCriteria();
     });
   }
-
 
   onLoadHeadMastersByCriteria(): void {
     this.IsLoading = true;
@@ -104,6 +105,18 @@ export class AccountComponent extends BaseListComponent<AccountModel> implements
     }, error => {
       console.log(error);
     });
+  }
+
+  ngAfterViewInit() {
+    this.tableDataSource.paginator = this.ListPaginator;
+  }
+  
+  onPageIndexChanged(evt) {
+    this.SearchBy.PageIndex = evt.pageIndex;
+    this.SearchBy.PageSize = evt.pageSize;
+    console.log("SearchBy",evt);
+
+    this.onLoadHeadMastersByCriteria();
   }
 
   resetFilters(): void {

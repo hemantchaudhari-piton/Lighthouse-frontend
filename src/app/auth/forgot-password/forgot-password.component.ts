@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { BaseComponent } from 'app/common/base/base.component';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment.delhi';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonService } from 'app/services/common.service';

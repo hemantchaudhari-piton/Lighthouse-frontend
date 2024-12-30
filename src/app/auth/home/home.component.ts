@@ -6,7 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { LoginModel } from 'app/models/login.model';
 import { AppConstants } from 'app/app.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment.delhi';
 import { BaseComponent } from 'app/common/base/base.component';
 import { CommonService } from 'app/services/common.service';
 

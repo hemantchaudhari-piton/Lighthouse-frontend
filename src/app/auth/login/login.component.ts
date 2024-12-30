@@ -9,7 +9,7 @@ import { AppConstants } from 'app/app.constants';
 import { AuthenticationService } from 'app/services/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment.delhi';
 import { CookieService } from 'ngx-cookie-service';
 import { BaseComponent } from 'app/common/base/base.component';
 import { CommonService } from 'app/services/common.service';

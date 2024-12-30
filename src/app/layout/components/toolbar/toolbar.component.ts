@@ -9,7 +9,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { AuthenticationService } from 'app/services/authentication.service';
 import { UserModel } from 'app/models/user.model';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
-import { environment } from 'environments/environment';
+import { environment } from '../../../../environments/environment.delhi';
 import {ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from 'app/constants/route.constant';
 import { LoginModel } from 'app/models/login.model';

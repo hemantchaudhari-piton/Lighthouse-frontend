@@ -14,7 +14,7 @@ import { CommonService } from 'app/services/common.service';
 import { CommonModule } from '@angular/common';
 import { env } from 'process';
 import { RoleTransactionService } from 'app/main/role-transactions/role-transaction.service';
-import { environment } from 'environments/environment';
+import { environment } from '../../../../../../environments/environment.delhi';
 
 @Component({
     // standalone : true,

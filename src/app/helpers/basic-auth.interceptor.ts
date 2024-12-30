@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthenticationService } from 'app/services/authentication.service';
-import { environment } from 'environments/environment';
+import { environment } from '../../environments/environment.delhi';
 import { AppConstants } from "app/app.constants";
 import { tap, catchError } from 'rxjs/operators';
 
