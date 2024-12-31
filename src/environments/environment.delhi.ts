@@ -11,6 +11,6 @@ export const environment = {
     // target: "demo",
     email: "support.demo.lighthouse@lend-a-hand-India.org",
     version: "2.1.0.03",
-    ApiBaseUrl: "https://delhi.lighthouse.coloredcow.com/LighthouseServices/"
-    // ApiBaseUrl:"http://localhost:5013/LighthouseServices/"
+    // ApiBaseUrl: "https://delhi.lighthouse.coloredcow.com/LighthouseServices/"
+    ApiBaseUrl:"http://localhost:5013/LighthouseServices/"
 };

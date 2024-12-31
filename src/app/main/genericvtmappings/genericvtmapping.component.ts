@@ -73,6 +73,8 @@ export class GenericVTMappingComponent extends BaseListComponent<GenericVTMappin
         this.sectorList = results[4].Results.$values;
 
       }
+      this.SearchBy.PageIndex = 0; 
+      this.SearchBy.PageSize = 10;
       this.onLoadGenericVTMappingByCriteria();
 
     });
@@ -187,6 +189,16 @@ export class GenericVTMappingComponent extends BaseListComponent<GenericVTMappin
 
   onLoadGenericVTMappingByFilters(): any {
     this.SearchBy.PageIndex = 0;
+    this.onLoadGenericVTMappingByCriteria();
+  }
+  ngAfterViewInit() {
+    this.tableDataSource.paginator = this.ListPaginator;
+  }
+  
+  onPageIndexChanged(evt) {
+    this.SearchBy.PageIndex = evt.pageIndex;
+    this.SearchBy.PageSize = evt.pageSize;
+
     this.onLoadGenericVTMappingByCriteria();
   }
 

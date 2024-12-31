@@ -114,7 +114,6 @@ export class AccountComponent extends BaseListComponent<AccountModel> implements
   onPageIndexChanged(evt) {
     this.SearchBy.PageIndex = evt.pageIndex;
     this.SearchBy.PageSize = evt.pageSize;
-    console.log("SearchBy",evt);
 
     this.onLoadHeadMastersByCriteria();
   }

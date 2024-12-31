@@ -62,6 +62,8 @@ export class SchoolSectorJobComponent extends BaseListComponent<SchoolSectorJobM
     }, error => {
       console.log(error);
     });
+    this.SearchBy.PageIndex = 0; 
+    this.SearchBy.PageSize = 10; 
     this.onLoadSchoolSectorJobByCriteria();
     this.schoolsectorjobService.getDropdownforSchoolSector(this.UserModel).subscribe((results) => {
 
@@ -165,6 +167,17 @@ export class SchoolSectorJobComponent extends BaseListComponent<SchoolSectorJobM
   }
   onLoadGenericVTMappingByFilters(): any {
     this.SearchBy.PageIndex = 0;
+    this.onLoadSchoolSectorJobByCriteria();
+  }
+
+  ngAfterViewInit() {
+    this.tableDataSource.paginator = this.ListPaginator;
+  }
+  
+  onPageIndexChanged(evt) {
+    this.SearchBy.PageIndex = evt.pageIndex;
+    this.SearchBy.PageSize = evt.pageSize;
+
     this.onLoadSchoolSectorJobByCriteria();
   }
 

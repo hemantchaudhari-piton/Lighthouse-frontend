@@ -50,6 +50,8 @@ export class VTAcademicClassSectionComponent extends BaseListComponent<VTAcademi
   }
 
   ngOnInit(): void {
+    this.SearchBy.PageIndex = 0; 
+    this.SearchBy.PageSize = 10;
     this.vtacademicclasssectionService.GetAllByCriteria(this.SearchBy).subscribe(response => {
       this.displayedColumns = ['VTPShortName', 'VCFullName','SchoolName', 'AcademicYear', 'ClassName', 'SectionName', 'VTName', 'VTEmailId', 'SectorName', 'JobRoleName', 'DateOfAllocation', 'CreatedBy', 'UpdatedBy', 'DateOfRemoval',  'IsActive', 'Actions'];
 
@@ -200,6 +202,18 @@ export class VTAcademicClassSectionComponent extends BaseListComponent<VTAcademi
   }
   onLoadVtAcedemicClassSectionsByFilters(): any {
     this.SearchBy.PageIndex = 0;
+    this.onLoadAcedemicClassSectionsByFilters();
+  }
+
+  
+  ngAfterViewInit() {
+    this.tableDataSource.paginator = this.ListPaginator;
+  }
+  
+  onPageIndexChanged(evt) {
+    this.SearchBy.PageIndex = evt.pageIndex;
+    this.SearchBy.PageSize = evt.pageSize;
+
     this.onLoadAcedemicClassSectionsByFilters();
   }
 
