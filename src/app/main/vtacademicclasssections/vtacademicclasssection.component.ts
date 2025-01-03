@@ -50,8 +50,7 @@ export class VTAcademicClassSectionComponent extends BaseListComponent<VTAcademi
   }
 
   ngOnInit(): void {
-    this.SearchBy.PageIndex = 0; 
-    this.SearchBy.PageSize = 10;
+
     this.vtacademicclasssectionService.GetAllByCriteria(this.SearchBy).subscribe(response => {
       this.displayedColumns = ['VTPShortName', 'VCFullName','SchoolName', 'AcademicYear', 'ClassName', 'SectionName', 'VTName', 'VTEmailId', 'SectorName', 'JobRoleName', 'DateOfAllocation', 'CreatedBy', 'UpdatedBy', 'DateOfRemoval',  'IsActive', 'Actions'];
 
@@ -69,6 +68,8 @@ export class VTAcademicClassSectionComponent extends BaseListComponent<VTAcademi
     }, error => {
       console.log(error);
     });
+    this.SearchBy.PageIndex = 0; 
+    this.SearchBy.PageSize = 10;
     this.onLoadAcedemicClassSectionsByFilters();
     this.vtacademicclasssectionService.getVTAcademicClassSection(this.UserModel).subscribe(results => {
       this.commonService.GetMasterDataByType({ DataType: 'AcademicYears', SelectTitle: 'Academic Year' }).subscribe((response: any) => {
@@ -131,10 +132,15 @@ export class VTAcademicClassSectionComponent extends BaseListComponent<VTAcademi
       this.tableDataSource.paginator = this.ListPaginator;
       this.tableDataSource.filteredData = this.tableDataSource.data;
       this.SearchBy.TotalResults = response.TotalResults;
+      console.log("response.TotalResults",response.TotalResults);
+      console.log("this.SearchBy.TotalResults",  this.SearchBy.TotalResults);
+      
 
       setTimeout(() => {
         this.ListPaginator.pageIndex = this.SearchBy.PageIndex;
         this.ListPaginator.length = this.SearchBy.TotalResults;
+        console.log("  this.ListPaginator.length",  this.ListPaginator.length); 
+
       });
 
       this.zone.run(() => {
@@ -208,6 +214,8 @@ export class VTAcademicClassSectionComponent extends BaseListComponent<VTAcademi
   
   ngAfterViewInit() {
     this.tableDataSource.paginator = this.ListPaginator;
+    console.log("this.ListPaginator",this.ListPaginator);
+    
   }
   
   onPageIndexChanged(evt) {
